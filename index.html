@@ -195,6 +195,10 @@
 
   /* ===== ホーム画面から起動(全画面)時 ===== */
   body.standalone #phone{width:100vw;height:100vh;height:100dvh;border-radius:0;border:none;}
+  @media (max-width:480px){
+    body{position:fixed;inset:0;display:block;}   /* iOSがページごとスクロールするのを防ぐ */
+    #phone{position:fixed;top:0;left:0;width:100vw;height:100%;height:100dvh;}
+  }
   body.standalone .statusbar{display:none;}
   body.standalone #home{padding-top:calc(env(safe-area-inset-top) + 6px);}
   body.standalone .chat-header{padding-top:calc(env(safe-area-inset-top) + 8px);}
@@ -468,17 +472,24 @@ input.addEventListener("input", ()=> sendBtn.disabled = !input.value.trim());
 const scrollBottom = () => { chatBody.scrollTop = chatBody.scrollHeight; };
 const phoneEl = $("phone");
 const vv = window.visualViewport;
-if (vv) {
+const isMobile = matchMedia("(max-width:480px)").matches;
+if (vv && isMobile) {
   const onVV = () => {
-    if ($("chat").classList.contains("active")) {
-      /* キーボードを除いた実際の見えている高さに端末フレームを合わせる */
-      phoneEl.style.height = Math.min(vv.height, 900) + "px";
+    if ($("chat").classList.contains("active") && document.activeElement === input) {
+      /* キーボードを除いた見えている領域に端末フレームをぴったり重ねる */
+      phoneEl.style.height = vv.height + "px";
+      phoneEl.style.transform = "translateY(" + vv.offsetTop + "px)";
       window.scrollTo(0, 0);
       scrollBottom();
+    } else {
+      phoneEl.style.height = "";
+      phoneEl.style.transform = "";
     }
   };
   vv.addEventListener("resize", onVV);
   vv.addEventListener("scroll", onVV);
+  /* iOSがこっそりページをスクロールさせたら即座に戻す */
+  window.addEventListener("scroll", ()=> window.scrollTo(0, 0));
 }
 input.addEventListener("focus", ()=>{
   /* キーボードの開くアニメーション中に数回、最下部へ張り付け直す */
@@ -486,8 +497,13 @@ input.addEventListener("focus", ()=>{
 });
 input.addEventListener("blur", ()=>{
   phoneEl.style.height = "";
+  phoneEl.style.transform = "";
   window.scrollTo(0, 0);
   setTimeout(scrollBottom, 100);
+});
+/* チャットの本文をタップしたらキーボードを閉じる(本物のアプリと同じ挙動) */
+chatBody.addEventListener("touchstart", ()=>{
+  if(document.activeElement === input) input.blur();
 });
 function send(){
   const text = input.value.trim();

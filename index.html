@@ -196,8 +196,8 @@
   /* ===== ホーム画面から起動(全画面)時 ===== */
   body.standalone #phone{width:100vw;height:100vh;height:100dvh;border-radius:0;border:none;}
   @media (max-width:480px){
-    body{position:fixed;inset:0;display:block;}   /* iOSがページごとスクロールするのを防ぐ */
-    #phone{position:fixed;top:0;left:0;width:100vw;height:100%;height:100dvh;}
+    body{position:fixed;inset:0;display:block;background:#fff;}   /* iOSがページごとスクロールするのを防ぐ */
+    #phone{position:fixed;top:0;left:0;width:100vw;height:100%;height:100dvh;background:#fff;box-shadow:none;}
   }
   body.standalone .statusbar{display:none;}
   body.standalone #home{padding-top:calc(env(safe-area-inset-top) + 6px);}

@@ -210,10 +210,10 @@
 
   <!-- ===== ホーム画面 ===== -->
   <div class="screen active" id="home">
-    <div class="statusbar"><span id="sb-time-1">9:41</span><span class="sb-icons">▮▮▮ ᯤ 🔋</span></div>
+    <div class="statusbar"><span id="sb-time-1">10:24</span><span class="sb-icons">▮▮▮ ᯤ 🔋</span></div>
     <div class="home-clock">
-      <div class="t" id="clock-big">9:41</div>
-      <div class="d" id="clock-date">7月19日 日曜日</div>
+      <div class="t" id="clock-big">10:24</div>
+      <div class="d" id="clock-date">8月1日　月曜日</div>
     </div>
     <div class="icon-grid" id="icon-grid"></div>
     <div class="dock" id="dock"></div>
@@ -221,11 +221,11 @@
 
   <!-- ===== チャット画面 ===== -->
   <div class="screen" id="chat">
-    <div class="statusbar dark"><span id="sb-time-2">9:41</span><span class="sb-icons">▮▮▮ ᯤ 🔋</span></div>
+    <div class="statusbar dark"><span id="sb-time-2">10:24</span><span class="sb-icons">▮▮▮ ᯤ 🔋</span></div>
     <div class="chat-header" id="chat-header">
       <button class="back-btn" id="back-btn">‹</button>
       <div>
-        <div class="room-title">月刊カルタ編集部（8）</div>
+        <div class="room-title">編集部</div>
         <div class="room-sub">メンバー 8人</div>
       </div>
       <div class="hdr-right"><span>📞</span><span>☰</span></div>
@@ -282,19 +282,24 @@ if (navigator.standalone || matchMedia("(display-mode: standalone)").matches
 const chatBody = $("chat-body");
 
 /* ---- 時計 ---- */
+/* 撮影用に日時は固定表示(端末の実時刻には連動しません) */
+const FIXED_DATE_LABEL = "8月1日　月曜日";
+const FIXED_TIME = "10:24";
 function tickClock(){
-  const n = new Date();
-  const t = n.getHours() + ":" + String(n.getMinutes()).padStart(2,"0");
-  const days = ["日","月","火","水","木","金","土"];
-  $("sb-time-1").textContent = t;
-  $("sb-time-2").textContent = t;
-  $("clock-big").textContent = t;
-  $("clock-date").textContent = `${n.getMonth()+1}月${n.getDate()}日 ${days[n.getDay()]}曜日`;
+  $("sb-time-1").textContent = FIXED_TIME;
+  $("sb-time-2").textContent = FIXED_TIME;
+  $("clock-big").textContent = FIXED_TIME;
+  $("clock-date").textContent = FIXED_DATE_LABEL;
 }
-tickClock(); setInterval(tickClock, 5000);
+tickClock();
+/* 新着メッセージのタイムスタンプも固定時刻を使用(実際の経過に応じて少しずつ進める) */
+let liveMinuteOffset = 0;
 const now = () => {
-  const n = new Date();
-  return n.getHours() + ":" + String(n.getMinutes()).padStart(2,"0");
+  const base = 24 + liveMinuteOffset;
+  const h = 10 + Math.floor(base/60);
+  const m = base % 60;
+  liveMinuteOffset++;
+  return h + ":" + String(m).padStart(2,"0");
 };
 
 /* ---- ホーム画面のアイコン ---- */
@@ -314,7 +319,7 @@ homeApps.forEach(([emoji,name,bg,badge])=>{
   $("icon-grid").appendChild(d);
 });
 const dockApps = [
-  {html:`<div class="app-icon talk-icon">${talkSVG}<span class="badge" id="talk-badge">83</span></div><div class="app-name">Talk</div>`, main:true},
+  {html:`<div class="app-icon talk-icon">${talkSVG}<span class="badge" id="talk-badge">27</span></div><div class="app-name">Talk</div>`, main:true},
   {html:`<div class="app-icon" style="background:#34c759;font-size:28px">📞</div><div class="app-name">電話</div>`},
   {html:`<div class="app-icon" style="background:#fff;font-size:28px">🌐</div><div class="app-name">ブラウザ</div>`},
   {html:`<div class="app-icon" style="background:linear-gradient(135deg,#f6d365,#fda085);font-size:28px">💬</div><div class="app-name">メッセージ</div>`},
@@ -343,49 +348,49 @@ const cast = {
    ここを書き換えれば台本を差し替えられます
 ========================================================= */
 const backlog = [
-  ["day","10月6日（月）"],
-  ["saeki","おはようございます。今週の進行表アップしました。校了は金曜23時です","9:02"],
-  ["hirose","おはようございます。対談の文字起こし、昼までにフォルダ入れます","9:05"],
-  ["yanagi","本日ロケハン行ってきます。夕方から雨予報なので予備日の候補ください","9:11"],
-  ["onodera","予備日、木曜午前でスタジオ仮おさえしました","9:14"],
-  ["makabe","特集の構成案に直し入れた。各自確認して今日中に戻して","9:40"],
+  ["day","7月30日（木）"],
+  ["saeki","おはようございます。今週の進行表アップしました。校了は金曜23時目安でお願いします","9:02"],
+  ["hirose","おはようございます、対談の文字起こし、お昼までにフォルダ入れておきますね","9:05"],
+  ["yanagi","本日ロケハン行ってきます。夕方から雨っぽいので予備日の候補もらえたら助かります","9:11"],
+  ["onodera","予備日、木曜午前でスタジオ仮おさえしました〜","9:14"],
+  ["makabe","おはようございます☺️ 特集の構成案、少し直しを入れてみました。お手すきのタイミングで見てもらえると嬉しいです","9:40"],
   ["saeki","P.12-13の図版、権利元からOK出ました。クレジット表記だけ指定ありです","10:22"],
-  ["nino","タイアップ2P、クライアント確認中です。水曜に戻し予定","11:03"],
-  ["makabe","湊さんは今日から今週いっぱい休暇です。担当分は佐伯さんと小野寺さんで巻き取り済み。本人への連絡は不要なので、各自そのつもりで","11:15"],
-  ["onodera","了解です。引き継ぎメモもらってるので問題ないです","11:17"],
-  ["saeki","こちらも把握してます👌","11:18"],
-  ["hirose","文字起こし入れました。2万字あるので抜粋案も添えてます","12:44"],
-  ["yanagi","ロケハン終わりました。第一候補の河原、午後は逆光きついので午前推奨です","16:30"],
-  ["makabe","なら本番は木曜午前に変更。柳さん機材手配よろしく","16:38"],
+  ["nino","タイアップ2P、クライアント確認中です。水曜に戻し予定です","11:03"],
+  ["makabe","湊さんは今日から今週いっぱいお休みです。担当分は佐伯さんと小野寺さんに進めてもらってるので、無理に連絡とかしなくて大丈夫です。みなさんよろしくお願いします🙏","11:15"],
+  ["onodera","了解です！引き継ぎメモもらってるので問題ないです","11:17"],
+  ["saeki","こちらも把握してます👌ゆっくり休んでもらいましょう","11:18"],
+  ["hirose","文字起こし入れました。2万字くらいあるので、抜粋案も一緒に添えておきますね","12:44"],
+  ["yanagi","ロケハン終わりました！第一候補の河原、午後は逆光きついので午前がよさそうです","16:30"],
+  ["makabe","なるほど、じゃあ本番は木曜の午前にしましょうか。柳さん、機材の手配だけお願いできますか？","16:38"],
 
-  ["day","10月7日（火）"],
-  ["saeki","進行表v2アップしました。木曜撮影に合わせて色校の戻しを1日前倒しします","9:08"],
-  ["hirose","巻頭コラム初稿入れました。ちょっと長いです、すみません","10:15"],
-  ["makabe","読んだ。リードが硬い。もう少し柔らかく。あと400字削れる","10:52"],
-  ["hirose","了解です、昼までに直します🙇","10:54"],
-  ["onodera","P.34対談、先方から発言箇所の修正依頼きてます。ゲラ段階で反映します","11:30"],
-  ["nino","タイアップ、クライアントOK出ました🙆 データ入稿は明日","14:02"],
-  ["yanagi","表紙候補カットの現像あがりました。A案とC案で迷ってます。フォルダ見てください","15:47"],
-  ["saeki","個人的にはC案。目線の抜けがいいです","15:55"],
-  ["hirose","私もC案に一票です","15:58"],
-  ["makabe","表紙はC案でいく。柳さん、色味だけ寒色に寄せて調整して","16:10"],
-  ["yanagi","承知しました。今夜中に上げます","16:12"],
-  ["saeki","本日分のゲラ、印刷所から戻りました。赤字多めなので各自担当ページ確認お願いします🙏","18:20"],
+  ["day","7月31日（金）"],
+  ["saeki","進行表v2アップしました。木曜撮影に合わせて色校の戻しを1日前倒しにさせてください","9:08"],
+  ["hirose","巻頭コラム初稿入れました。ちょっと長くなってしまってすみません","10:15"],
+  ["makabe","読みました！リード、少しだけ硬めな印象なので、もう少し柔らかい感じにできそうです。あと400字くらい削れると読みやすくなりそうです😊","10:52"],
+  ["hirose","なるほど、了解です。お昼までに直しますね🙇","10:54"],
+  ["onodera","P.34対談、先方から発言箇所の修正依頼きてます。ゲラ段階で反映しますね","11:30"],
+  ["nino","タイアップ、クライアントOKいただけました🙆 データ入稿は明日です","14:02"],
+  ["yanagi","表紙候補カットの現像あがりました。A案とC案で迷ってます、フォルダ見てもらえますか","15:47"],
+  ["saeki","個人的にはC案かなと。目線の抜けがいい気がします","15:55"],
+  ["hirose","私もC案に一票です〜","15:58"],
+  ["makabe","私もC案かなと思ってました。柳さん、色味だけ少し寒色寄りに調整お願いできますか？","16:10"],
+  ["yanagi","承知しました！今夜中に上げます","16:12"],
+  ["saeki","本日分のゲラ、印刷所から戻りました。赤字多めなので、お時間あるときに各自ページ確認お願いします🙏","18:20"],
 
   ["day","今日"],
-  ["saeki","おはようございます。色校戻し日です。18時までに各自赤入れ完了でお願いします","8:55"],
-  ["hirose","コラム直し反映済みです。P.8の見出しだけ最終確認ください","9:20"],
-  ["onodera","対談の修正、先方OKもらいました。ゲラに反映します","9:48"],
-  ["yanagi","表紙C案、色調整版アップしました。刷り出しで確認したいです","10:05"],
-  ["makabe","表紙OK。これで進めて","10:11"],
-  ["nino","タイアップ入稿完了です。念校だけ回してください","10:40"],
+  ["saeki","おはようございます。今日は色校戻し日です。18時までに赤入れ完了できたら嬉しいです","8:55"],
+  ["hirose","コラム直し、反映済みです。P.8の見出しだけ最終確認お願いします","9:20"],
+  ["onodera","対談の修正、先方からOKもらえました。ゲラに反映しますね","9:48"],
+  ["yanagi","表紙C案、色調整版アップしました。よければ刷り出しで確認したいです","10:05"],
+  ["makabe","確認しました、表紙OKです！このまま進めてください、いい仕上がりですね👍","10:11"],
+  ["nino","タイアップ入稿完了です。念校だけ後ほど回しますね","10:19"],
 ];
 
 /* ---- 開いた後に流れてくる新着（湊さん宛ての言及は一切なし） ---- */
 const liveFeed = [
-  ["saeki","P.20、写真差し替え待ちです。柳さんお願いします"],
-  ["yanagi","すみません、10分で上げます💦"],
-  ["onodera","P.34反映しました。念のためダブルチェックお願いします"],
+  ["saeki","P.20、写真差し替え待ってます。柳さんお願いできますか"],
+  ["yanagi","あ、すみません！10分で上げます💦"],
+  ["onodera","P.34反映しました〜。念のためダブルチェックお願いします"],
   ["hirose","目次の入れ替え、対応済みです"],
 ];
 

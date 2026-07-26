@@ -1,122 +1,585 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Story</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Talk">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAADvElEQVR4nO3cUW7TUBRFURdVZUpMpAySiZQp8cdHpChq2MWO7XfPfdnrHyk+bF1HRfTl7eN9kf7lW/UHUC7jEDIOIeMQMg4h4xAyDiHjEDIOIeMQMg4h4xAyDiHjEDIOIeMQMg4h4xAyDiHjEDIOIeMQMg4h4xAyDiHjEDIOIeMQMg4h4xAyDiHjEDIOIeMQMg4h4xAyDiHjEDIOIeMQMg6h1+oPUOPPj19b/8j33z/P+CTJXp7h11s/kMIa0+cybRwnBUGmDGW2OAY3cW+mSiaJo7yJexNU0j6OwCxutU6kcRzhWdxqmkjLOBplcatdIs3iaJrFrUaJtIljgixutUikx4/PJytjafJE6ZejxYh7JJ+Q6MsxfRlL9jPmxpG82rFinzQ0jti9TpL5vIlxZC51tsCnjosjcKNh0p49K460dcaLWiAojqhdCuXskBJHziIJQtaIiCNkiygJm9THkbBCpvJliuMof/5wtfvUXw7FqozDs7FG4UplcVjGelVb+VoRqonDs7FVyWJeDqGCODwbjxm/m5dDaHQcno09Bq/n5RAyDqGhcfhO2W/khl4OIeMQMg4h4xAaF4ffRo8ybEkvh5BxCBmHkHEIGYeQcQgZh5BxCBmHkHEIjYsj+Xcq9jJsSS+HkHEIGYeQcQgNjcPvpPuN3NDLIWQcQqPj8M2yx+D1vBxCBXF4PB4zfjcvh1BNHB6PrUoW83IIlcXh8VivaqvKy2EfaxSu5GtFqDgOj8fXavepvxz2QcqXqY9jCVghUMImEXEsGVvkCFkjJY4lZpFyOTsExbEk7VIlaoGsOJawdQZLe/a4OJa8jcYIfOrEOJbIpU6V+byhcSype50h9klz41iCVztQ8jO+vH28V3+G/5vy11QmZ3ERfTmu8nfcqsUT9bgcVxOckBZZXDSLY+ncR6MsLl6rP8A2Tctol8VFszjaaZrFhXGcpXUWF8ZxsAmauOoUR/IXjpmauOoUR5opg7hlHGtNn8K9Z4zjCf+aH9MmjkO+cJjFJj3+beUQlrFVm8uxh1k8pkccD79TzGKPmV8rlrFTj8uxlVkcYrY4zOJADV4r679wWMaxJrkcZnGG9nGYxXkavFa+YBmnSr8c9IXDLAZoeTksY4z0y/GJWYzUJg6zGC/6tXL9wmEZJdIvh1kU6vc/3jRM9GtFtYxDyDiEjEPIOISMQ8g4hIxDyDiEjEPIOISMQ8g4hIxDyDiEjEPIOISMQ8g4hIxDyDiEjEPIOISMQ8g4hIxDyDiEjEPIOISMQ+gvQQrYGgF/gRYAAAAASUVORK5CYII=">
+<title>Talk — 撮影用ハリボテ</title>
 <style>
-  *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent;}
-  html,body{height:100%;background:#000;overflow:hidden;
-    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;color:#fff;}
-  body{display:grid;place-items:center;}
-
-  .phone{position:relative;width:100vw;height:100dvh;overflow:hidden;}
-  @media (min-width:600px){
-    .phone{width:min(100vw,calc(100dvh*9/16));height:min(100dvh,calc(100vw*16/9));border-radius:22px;}
+  :root{
+    --green:#06c755;
+    --bubble-me:#8de055;
+    --chat-bg:#8cabd8;
+    --ink:#1c1c1e;
   }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  html{height:100%;height:100dvh;}
+  body{
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+    background:#111;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    height:100%;height:100dvh;
+    touch-action:manipulation;          /* ダブルタップズーム防止 */
+    overscroll-behavior:none;           /* 引っ張り更新・バウンス防止 */
+    -webkit-user-select:none;user-select:none;  /* 長押しでの文字選択防止 */
+  }
+  input{-webkit-user-select:text;user-select:text;}
+  #phone{
+    position:relative;
+    width:min(100vw, 420px);
+    height:min(100vh, 900px);
+    height:min(100dvh, 900px);
+    background:#000;
+    overflow:hidden;
+    box-shadow:0 20px 80px rgba(0,0,0,.6);
+  }
+  @media(min-width:480px) and (min-height:920px){
+    #phone{border-radius:44px;border:6px solid #222;}
+  }
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;}
+  .screen.active{display:flex;}
 
-  /* 動画をヨコに並べたレール。これを translateX で動かす */
-  .track{display:flex;height:100%;}
-  .track.anim{transition:transform .3s cubic-bezier(.22,.61,.36,1);}
-  .track video{flex:0 0 100%;width:100%;height:100%;object-fit:cover;background:#000;}
+  .statusbar{
+    height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 22px;font-size:14px;font-weight:600;color:#fff;z-index:5;
+  }
+  .statusbar.dark{color:#111;}
+  .sb-icons{display:flex;gap:5px;align-items:center;letter-spacing:1px;}
 
-  /* 上のバー */
-  .top{position:absolute;top:0;left:0;right:0;padding:calc(10px + env(safe-area-inset-top)) 12px 0;
-    background:linear-gradient(rgba(0,0,0,.5),transparent);}
-  .bars{display:flex;gap:3px;height:2.5px;}
-  .bars div{flex:1;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden;}
-  .bars i{display:block;height:100%;width:0;background:#fff;}
-  .head{display:flex;align-items:center;gap:9px;padding:11px 2px 0;font-size:13px;}
-  .ava{width:32px;height:32px;border-radius:50%;
-    background:conic-gradient(from 200deg,#f9ce34,#ee2a7b,#6228d7,#f9ce34);}
-  .head b{font-weight:600;}
-  .head span{color:rgba(255,255,255,.55);}
+  /* ===== ホーム画面 ===== */
+  #home{
+    background:linear-gradient(160deg,#243b6b 0%,#3b5e9e 45%,#6e8fc4 80%,#c9a2b8 100%);
+  }
+  .home-clock{text-align:center;color:#fff;margin:26px 0 30px;}
+  .home-clock .t{font-size:64px;font-weight:200;letter-spacing:2px;}
+  .home-clock .d{font-size:15px;opacity:.85;margin-top:2px;}
+  .icon-grid{
+    flex:1;display:grid;grid-template-columns:repeat(4,1fr);
+    gap:22px 10px;padding:0 24px;align-content:start;
+  }
+  .app{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;user-select:none;}
+  .app-icon{
+    width:60px;height:60px;border-radius:15px;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;box-shadow:0 4px 10px rgba(0,0,0,.25);
+  }
+  .app-name{font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);}
+  .badge{
+    position:absolute;top:-7px;right:-9px;min-width:24px;height:24px;
+    background:#ff3b30;border-radius:12px;color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;padding:0 6px;
+    box-shadow:0 2px 5px rgba(0,0,0,.35);
+  }
+  .dock{
+    flex:none;margin:10px 14px calc(14px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.22);backdrop-filter:blur(14px);
+    border-radius:26px;padding:12px 0;
+    display:grid;grid-template-columns:repeat(4,1fr);justify-items:center;
+  }
+  .talk-icon{background:var(--green);}
+  .talk-icon svg{width:34px;height:34px;fill:#fff;}
 
-  /* 下のバー */
-  .bottom{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:10px;
-    padding:12px 12px calc(12px + env(safe-area-inset-bottom));
-    background:linear-gradient(transparent,rgba(0,0,0,.55));}
-  .msg{flex:1;height:42px;padding:0 16px;border:1px solid rgba(255,255,255,.65);border-radius:21px;
-    background:transparent;color:#fff;font:inherit;font-size:14px;outline:none;}
-  .msg::placeholder{color:rgba(255,255,255,.8);}
-  .btn{width:42px;height:42px;border:0;background:none;padding:0;display:grid;place-items:center;}
-  .btn svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-  .btn.on svg{fill:#ff2d55;stroke:#ff2d55;}
+  /* ===== チャット画面 ===== */
+  #chat{background:var(--chat-bg);}
+  .chat-header{
+    flex:none;background:rgba(255,255,255,.96);
+    display:flex;align-items:center;gap:10px;padding:8px 12px 10px;
+    border-bottom:1px solid rgba(0,0,0,.08);
+  }
+  .back-btn{font-size:24px;color:var(--ink);background:none;border:none;padding:2px 6px;cursor:pointer;}
+  .room-title{font-size:16px;font-weight:700;color:var(--ink);}
+  .room-sub{font-size:11px;color:#8e8e93;}
+  .hdr-right{margin-left:auto;display:flex;gap:16px;font-size:19px;color:#333;}
+  .chat-body{
+    flex:1;overflow-y:auto;padding:12px 12px 8px;
+    -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+    display:flex;flex-direction:column;gap:2px;
+  }
+  .day-chip{
+    align-self:center;background:rgba(0,0,0,.18);color:#fff;
+    font-size:11px;padding:3px 12px;border-radius:11px;margin:14px 0 10px;
+  }
+  .msg-row{display:flex;gap:8px;margin:7px 0;align-items:flex-end;}
+  .msg-row.me{flex-direction:row-reverse;}
+  .avatar{
+    width:36px;height:36px;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;color:#fff;font-weight:700;align-self:flex-start;
+  }
+  .msg-col{max-width:72%;display:flex;flex-direction:column;}
+  .sender{font-size:11px;color:#fff;margin:0 0 3px 4px;text-shadow:0 1px 2px rgba(0,0,0,.15);}
+  .bubble{
+    background:#fff;border-radius:16px;padding:9px 12px;
+    font-size:14.5px;line-height:1.55;color:var(--ink);
+    box-shadow:0 1px 2px rgba(0,0,0,.12);
+    white-space:pre-wrap;word-break:break-word;
+  }
+  .msg-row:not(.me) .bubble{border-top-left-radius:5px;}
+  .msg-row.me .bubble{background:var(--bubble-me);border-top-right-radius:5px;}
+  .meta{
+    font-size:10px;color:#eef3fa;flex:none;text-align:right;
+    display:flex;flex-direction:column;justify-content:flex-end;gap:1px;
+    text-shadow:0 1px 2px rgba(0,0,0,.2);
+  }
+  .msg-row.me .meta{align-items:flex-end;}
+  .read{color:#fdf6d8;font-weight:600;min-height:12px;}
+  .mention{color:#0a84ff;font-weight:700;}
+  .msg-row.enter{animation:pop .28s ease;}
+  @keyframes pop{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+  .chat-input{
+    flex:none;background:#fff;display:flex;align-items:center;gap:8px;
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+    border-top:1px solid rgba(0,0,0,.08);
+  }
+  .ci-btn{font-size:22px;background:none;border:none;color:#555;padding:2px 4px;cursor:pointer;}
+  #msg-input{
+    flex:1;border:none;background:#f2f2f7;border-radius:18px;
+    padding:8px 14px;font-size:16px;outline:none;font-family:inherit;
+  }
+  #send-btn{
+    background:none;border:none;color:var(--green);
+    font-size:15px;font-weight:700;padding:6px 8px;cursor:pointer;
+  }
+  #send-btn:disabled{color:#c7c7cc;}
+
+  /* ===== 着信オーバーレイ ===== */
+  #incoming{
+    position:absolute;inset:0;z-index:50;display:none;flex-direction:column;
+    background:linear-gradient(180deg,#0c2a1a 0%,#123a26 55%,#0a2015 100%);
+    color:#fff;text-align:center;
+  }
+  #incoming.active{display:flex;animation:callin .35s ease;}
+  @keyframes callin{from{opacity:0;transform:scale(1.05);}to{opacity:1;transform:none;}}
+  .call-top{flex:none;padding-top:70px;}
+  .call-app{font-size:13px;letter-spacing:2px;color:rgba(255,255,255,.55);}
+  .call-avatar{
+    width:110px;height:110px;border-radius:50%;margin:34px auto 20px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:46px;font-weight:700;color:#fff;
+    animation:ringpulse 1.6s ease infinite;
+  }
+  @keyframes ringpulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(6,199,85,.55);}
+    50%{box-shadow:0 0 0 26px rgba(6,199,85,0);}
+  }
+  .call-name{font-size:28px;font-weight:700;}
+  .call-status{font-size:15px;color:rgba(255,255,255,.7);margin-top:8px;}
+  .call-status .dots::after{content:"";animation:dots 1.5s steps(4) infinite;}
+  @keyframes dots{0%{content:"";}25%{content:".";}50%{content:"..";}75%{content:"...";}}
+  .call-actions{
+    flex:none;margin-top:auto;padding-bottom:calc(60px + env(safe-area-inset-bottom));
+    display:flex;justify-content:space-evenly;
+  }
+  .call-btn{display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:none;cursor:pointer;}
+  .call-circle{
+    width:72px;height:72px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .call-circle svg{width:34px;height:34px;fill:#fff;}
+  .decline .call-circle{background:#ff3b30;}
+  .accept .call-circle{background:var(--green);animation:shake 1.2s ease infinite;}
+  @keyframes shake{
+    0%,100%{transform:rotate(0);}
+    10%{transform:rotate(-12deg);}20%{transform:rotate(10deg);}
+    30%{transform:rotate(-8deg);}40%{transform:rotate(6deg);}50%{transform:rotate(0);}
+  }
+  .call-btn span{font-size:13px;color:rgba(255,255,255,.85);}
+  #call-timer{font-variant-numeric:tabular-nums;}
+
+  /* ===== ホーム画面から起動(全画面)時 ===== */
+  body.standalone #phone{width:100vw;height:100vh;height:100dvh;border-radius:0;border:none;}
+  @media (max-width:480px){
+    body{position:fixed;inset:0;display:block;background:#fff;}   /* iOSがページごとスクロールするのを防ぐ */
+    #phone{position:fixed;top:0;left:0;width:100vw;height:100%;height:100dvh;background:#fff;box-shadow:none;}
+  }
+  body.standalone .statusbar{display:none;}
+  body.standalone #home{padding-top:calc(env(safe-area-inset-top) + 6px);}
+  body.standalone .chat-header{padding-top:calc(env(safe-area-inset-top) + 8px);}
+  body.standalone .call-top{padding-top:calc(env(safe-area-inset-top) + 56px);}
 </style>
 </head>
 <body>
+<div id="phone">
 
-<div class="phone">
-  <div class="track" id="track"></div>
-
-  <div class="top">
-    <div class="bars" id="bars"></div>
-    <div class="head"><div class="ava"></div><b>my_story</b><span>3時間前</span></div>
+  <!-- ===== ホーム画面 ===== -->
+  <div class="screen active" id="home">
+    <div class="statusbar"><span id="sb-time-1">10:24</span><span class="sb-icons">▮▮▮ ᯤ 🔋</span></div>
+    <div class="home-clock">
+      <div class="t" id="clock-big">10:24</div>
+      <div class="d" id="clock-date">8月1日　月曜日</div>
+    </div>
+    <div class="icon-grid" id="icon-grid"></div>
+    <div class="dock" id="dock"></div>
   </div>
 
-  <div class="bottom">
-    <input class="msg" placeholder="メッセージを送信">
-    <button class="btn" id="like" aria-label="いいね">
-      <svg viewBox="0 0 24 24"><path d="M12 20.5S3.5 14.9 3.5 9.3A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.5 2.9c0 5.6-8.5 11.2-8.5 11.2Z"/></svg>
-    </button>
-    <button class="btn" aria-label="拡散">
-      <svg viewBox="0 0 24 24"><path d="M21.5 2.5 2.8 9.6l6.6 2.4 2.4 6.6 9.7-16.1Z"/><path d="M9.4 12 21.5 2.5"/></svg>
-    </button>
+  <!-- ===== チャット画面 ===== -->
+  <div class="screen" id="chat">
+    <div class="statusbar dark"><span id="sb-time-2">10:24</span><span class="sb-icons">▮▮▮ ᯤ 🔋</span></div>
+    <div class="chat-header" id="chat-header">
+      <button class="back-btn" id="back-btn">‹</button>
+      <div>
+        <div class="room-title">編集部</div>
+        <div class="room-sub">メンバー 8人</div>
+      </div>
+      <div class="hdr-right"><span>📞</span><span>☰</span></div>
+    </div>
+    <div class="chat-body" id="chat-body"></div>
+    <div class="chat-input">
+      <button class="ci-btn">＋</button>
+      <input id="msg-input" type="text" placeholder="メッセージを入力" autocomplete="off">
+      <button class="ci-btn">😊</button>
+      <button id="send-btn" disabled>送信</button>
+    </div>
   </div>
+
+  <!-- ===== 着信オーバーレイ ===== -->
+  <div id="incoming">
+    <div class="call-top">
+      <div class="call-app">TALK 無料通話</div>
+      <div class="call-avatar" style="background:#5b4a8a">小</div>
+      <div class="call-name">小林編集長</div>
+      <div class="call-status" id="call-status"><span class="dots">着信中</span></div>
+    </div>
+    <div class="call-actions" id="call-actions">
+      <button class="call-btn decline" id="btn-decline">
+        <div class="call-circle"><svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .4-.23.75-.57.92-1 .5-1.92 1.15-2.73 1.9-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.21 13.15c-.18-.17-.21-.42-.21-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.74c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.81-.75-1.73-1.4-2.73-1.9-.34-.17-.57-.52-.57-.92v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></div>
+        <span>拒否</span>
+      </button>
+      <button class="call-btn accept" id="btn-accept">
+        <div class="call-circle"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
+        <span>応答</span>
+      </button>
+    </div>
+  </div>
+
 </div>
 
 <script>
-// ▼ 差し替えるのはここだけ。この HTML と同じ場所に置いた動画のファイル名。
-const VIDEOS = ['1.mp4', '2.mp4', '3.mp4'];
+/* =========================================================
+   演出コントロール（撮影用）
+   ・本人が返信 → 既読がつき始めた直後に、編集長から着信
+     （テキストでの前フリは一切なし）
+   ・手動着信: チャットのヘッダーを素早く3回タップ
+   ・キーボード: C = 着信 / R = リセット
+========================================================= */
+const CALL_DELAY = 5500;          // 返信送信から着信までの時間(ms)。既読が2〜3件ついた頃
+const AUTO_FLOW_INTERVAL = 3000;  // 開いた後、新着メッセージが流れてくる間隔
 
-const track = document.getElementById('track');
-const bars  = document.getElementById('bars');
-let i = 0;
+const $ = id => document.getElementById(id);
 
-VIDEOS.forEach((src, n) => {
-  const v = document.createElement('video');
-  v.src = src; v.muted = true; v.playsInline = true; v.preload = 'auto';  // 音を出すなら muted を false に
-  v.ontimeupdate = () => { if (n === i && v.duration) bar(n, v.currentTime / v.duration); };
-  v.onended = () => { if (n === i) go(i + 1); };
-  track.append(v);
-  bars.insertAdjacentHTML('beforeend', '<div><i></i></div>');
+/* ホーム画面から起動されたか判定 → 偽ステータスバーを消して本物に任せる */
+if (navigator.standalone || matchMedia("(display-mode: standalone)").matches
+    || matchMedia("(display-mode: fullscreen)").matches) {
+  document.body.classList.add("standalone");
+}
+const chatBody = $("chat-body");
+
+/* ---- 時計 ---- */
+/* 撮影用に日時は固定表示(端末の実時刻には連動しません) */
+const FIXED_DATE_LABEL = "8月1日　月曜日";
+const FIXED_TIME = "10:24";
+function tickClock(){
+  $("sb-time-1").textContent = FIXED_TIME;
+  $("sb-time-2").textContent = FIXED_TIME;
+  $("clock-big").textContent = FIXED_TIME;
+  $("clock-date").textContent = FIXED_DATE_LABEL;
+}
+tickClock();
+/* 新着メッセージのタイムスタンプも固定時刻を使用(実際の経過に応じて少しずつ進める) */
+let liveMinuteOffset = 0;
+const now = () => {
+  const base = 24 + liveMinuteOffset;
+  const h = 10 + Math.floor(base/60);
+  const m = base % 60;
+  liveMinuteOffset++;
+  return h + ":" + String(m).padStart(2,"0");
+};
+
+/* ---- ホーム画面のアイコン ---- */
+const talkSVG = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.8 1.5 5.28 3.83 6.89-.13.47-.72 2.6-.75 2.77 0 0-.02.12.06.17.08.05.18.02.18.02.24-.03 2.78-1.82 3.22-2.13.79.16 1.61.28 2.46.28 5.52 0 10-3.94 10-8.8S17.52 2 12 2z"/></svg>`;
+const homeApps = [
+  ["📷","カメラ","#3a3a3c"],["🖼️","写真","linear-gradient(135deg,#fbd3e9,#bb377d)"],
+  ["🗓️","カレンダー","#fff"],["⏰","時計","#111"],
+  ["🗺️","マップ","linear-gradient(135deg,#a8e063,#56ab2f)"],["📝","メモ","#f7d774"],
+  ["☁️","天気","linear-gradient(135deg,#4facfe,#00c6fb)"],["🎵","ミュージック","linear-gradient(135deg,#fc5c7d,#6a82fb)"],
+  ["✉️","メール","linear-gradient(135deg,#5aa8f5,#2f6fed)",3],["🧮","計算機","#2c2c2e"],
+  ["🛍️","ストア","#3478f6"],["⚙️","設定","#8e8e93"],
+];
+homeApps.forEach(([emoji,name,bg,badge])=>{
+  const d = document.createElement("div");
+  d.className = "app";
+  d.innerHTML = `<div class="app-icon" style="background:${bg}">${emoji}${badge?`<span class="badge">${badge}</span>`:""}</div><div class="app-name">${name}</div>`;
+  $("icon-grid").appendChild(d);
+});
+const dockApps = [
+  {html:`<div class="app-icon talk-icon">${talkSVG}<span class="badge" id="talk-badge">27</span></div><div class="app-name">Talk</div>`, main:true},
+  {html:`<div class="app-icon" style="background:#34c759;font-size:28px">📞</div><div class="app-name">電話</div>`},
+  {html:`<div class="app-icon" style="background:#fff;font-size:28px">🌐</div><div class="app-name">ブラウザ</div>`},
+  {html:`<div class="app-icon" style="background:linear-gradient(135deg,#f6d365,#fda085);font-size:28px">💬</div><div class="app-name">メッセージ</div>`},
+];
+dockApps.forEach(a=>{
+  const d = document.createElement("div");
+  d.className = "app";
+  d.innerHTML = a.html;
+  if(a.main) d.addEventListener("click", openChat);
+  $("dock").appendChild(d);
 });
 
-const bar = (n, r) => bars.children[n].firstChild.style.width = Math.min(1, r) * 100 + '%';
+/* ---- 登場人物 ---- */
+const cast = {
+  saeki:  {name:"佐伯（デスク）",   initial:"佐", color:"#c0653a"},
+  yanagi: {name:"柳（カメラマン）", initial:"柳", color:"#3a7bc0"},
+  onodera:{name:"小野寺（副編集長）",initial:"野", color:"#3aa06b"},
+  makabe: {name:"小林編集長",       initial:"小", color:"#5b4a8a"},
+  hirose: {name:"広瀬（ライター）", initial:"広", color:"#b03a6e"},
+  nino:   {name:"二宮（営業）",     initial:"二", color:"#8a7a3a"},
+};
 
-function go(n){
-  n = (n + VIDEOS.length) % VIDEOS.length;      // 端まで行ったら最初に戻る
-  track.children[i].pause();
-  i = n;
-  track.classList.add('anim');
-  track.style.transform = `translateX(${-i * 100}%)`;
-  [...bars.children].forEach((s, k) => bar(k, k < i ? 1 : 0));
-  const v = track.children[i];
-  v.currentTime = 0;
-  v.play().catch(() => {});
+/* =========================================================
+   溜まっているログ（開いた時点で全部表示・スクロール可能）
+   形式: ["day","ラベル"] または ["人物キー","本文","時刻"]
+   ここを書き換えれば台本を差し替えられます
+========================================================= */
+const backlog = [
+  ["day","7月30日（木）"],
+  ["saeki","おはようございます。今週の進行表アップしました。校了は金曜23時目安でお願いします","9:02"],
+  ["hirose","おはようございます、対談の文字起こし、お昼までにフォルダ入れておきますね","9:05"],
+  ["yanagi","本日ロケハン行ってきます。夕方から雨っぽいので予備日の候補もらえたら助かります","9:11"],
+  ["onodera","予備日、木曜午前でスタジオ仮おさえしました〜","9:14"],
+  ["makabe","おはようございます☺️ 特集の構成案、少し直しを入れてみました。お手すきのタイミングで見てもらえると嬉しいです","9:40"],
+  ["saeki","P.12-13の図版、権利元からOK出ました。クレジット表記だけ指定ありです","10:22"],
+  ["nino","タイアップ2P、クライアント確認中です。水曜に戻し予定です","11:03"],
+  ["makabe","湊さんは今日から今週いっぱいお休みです。担当分は佐伯さんと小野寺さんに進めてもらってるので、無理に連絡とかしなくて大丈夫です。みなさんよろしくお願いします🙏","11:15"],
+  ["onodera","了解です！引き継ぎメモもらってるので問題ないです","11:17"],
+  ["saeki","こちらも把握してます👌ゆっくり休んでもらいましょう","11:18"],
+  ["hirose","文字起こし入れました。2万字くらいあるので、抜粋案も一緒に添えておきますね","12:44"],
+  ["yanagi","ロケハン終わりました！第一候補の河原、午後は逆光きついので午前がよさそうです","16:30"],
+  ["makabe","なるほど、じゃあ本番は木曜の午前にしましょうか。柳さん、機材の手配だけお願いできますか？","16:38"],
+
+  ["day","7月31日（金）"],
+  ["saeki","進行表v2アップしました。木曜撮影に合わせて色校の戻しを1日前倒しにさせてください","9:08"],
+  ["hirose","巻頭コラム初稿入れました。ちょっと長くなってしまってすみません","10:15"],
+  ["makabe","読みました！リード、少しだけ硬めな印象なので、もう少し柔らかい感じにできそうです。あと400字くらい削れると読みやすくなりそうです😊","10:52"],
+  ["hirose","なるほど、了解です。お昼までに直しますね🙇","10:54"],
+  ["onodera","P.34対談、先方から発言箇所の修正依頼きてます。ゲラ段階で反映しますね","11:30"],
+  ["nino","タイアップ、クライアントOKいただけました🙆 データ入稿は明日です","14:02"],
+  ["yanagi","表紙候補カットの現像あがりました。A案とC案で迷ってます、フォルダ見てもらえますか","15:47"],
+  ["saeki","個人的にはC案かなと。目線の抜けがいい気がします","15:55"],
+  ["hirose","私もC案に一票です〜","15:58"],
+  ["makabe","私もC案かなと思ってました。柳さん、色味だけ少し寒色寄りに調整お願いできますか？","16:10"],
+  ["yanagi","承知しました！今夜中に上げます","16:12"],
+  ["saeki","本日分のゲラ、印刷所から戻りました。赤字多めなので、お時間あるときに各自ページ確認お願いします🙏","18:20"],
+
+  ["day","今日"],
+  ["saeki","おはようございます。今日は色校戻し日です。18時までに赤入れ完了できたら嬉しいです","8:55"],
+  ["hirose","コラム直し、反映済みです。P.8の見出しだけ最終確認お願いします","9:20"],
+  ["onodera","対談の修正、先方からOKもらえました。ゲラに反映しますね","9:48"],
+  ["yanagi","表紙C案、色調整版アップしました。よければ刷り出しで確認したいです","10:05"],
+  ["makabe","確認しました、表紙OKです！このまま進めてください、いい仕上がりですね👍","10:11"],
+  ["nino","タイアップ入稿完了です。念校だけ後ほど回しますね","10:19"],
+];
+
+/* ---- 開いた後に流れてくる新着（湊さん宛ての言及は一切なし） ---- */
+const liveFeed = [
+  ["saeki","P.20、写真差し替え待ってます。柳さんお願いできますか"],
+  ["yanagi","あ、すみません！10分で上げます💦"],
+  ["onodera","P.34反映しました〜。念のためダブルチェックお願いします"],
+  ["hirose","目次の入れ替え、対応済みです"],
+];
+
+/* ---- メッセージ描画 ---- */
+function addMsg(who, text, isMe=false, time=null, animate=true){
+  const row = document.createElement("div");
+  row.className = "msg-row" + (animate ? " enter" : "") + (isMe ? " me" : "");
+  const t = time || now();
+  if(isMe){
+    row.innerHTML = `
+      <div class="meta"><span class="read" data-read></span><span>${t}</span></div>
+      <div class="msg-col"><div class="bubble"></div></div>`;
+  } else {
+    const p = cast[who];
+    row.innerHTML = `
+      <div class="avatar" style="background:${p.color}">${p.initial}</div>
+      <div class="msg-col">
+        <div class="sender">${p.name}</div>
+        <div class="bubble"></div>
+      </div>
+      <div class="meta"><span>${t}</span></div>`;
+  }
+  const bubble = row.querySelector(".bubble");
+  bubble.textContent = text;
+  bubble.innerHTML = bubble.innerHTML.replace(/(@[^\s　]+)/g,'<span class="mention">$1</span>');
+  chatBody.appendChild(row);
+  return row;
+}
+function addDayChip(label){
+  const d = document.createElement("div");
+  d.className = "day-chip";
+  d.textContent = label;
+  chatBody.appendChild(d);
 }
 
-// 横スワイプ
-let x0 = null;
-track.parentElement.onpointerdown = e => {
-  if (e.target.closest('.bottom')) return;
-  x0 = e.clientX; track.classList.remove('anim');
-};
-track.parentElement.onpointermove = e => {
-  if (x0 === null) return;
-  track.style.transform = `translateX(calc(${-i * 100}% + ${e.clientX - x0}px))`;
-};
-track.parentElement.onpointerup = e => {
-  if (x0 === null) return;
-  const dx = e.clientX - x0;
-  x0 = null;
-  go(Math.abs(dx) > 60 ? i + (dx < 0 ? 1 : -1) : i);
-};
+/* ---- 溜まったログを最初に全部描画 ---- */
+backlog.forEach(item=>{
+  if(item[0] === "day") addDayChip(item[1]);
+  else addMsg(item[0], item[1], false, item[2], false);
+});
 
-document.getElementById('like').onclick = e => e.currentTarget.classList.toggle('on');
-onkeydown = e => { if (e.key === 'ArrowRight') go(i + 1); if (e.key === 'ArrowLeft') go(i - 1); };
+/* ---- 既読カウント演出 ---- */
+function animateRead(row){
+  const el = row.querySelector("[data-read]");
+  let n = 0;
+  const step = () => {
+    n++;
+    el.textContent = "既読 " + n;
+    if(n < 7) setTimeout(step, 350 + Math.random()*650);
+  };
+  setTimeout(step, 1200);
+}
 
-go(0);
+/* ---- 画面遷移 ---- */
+let flowStarted = false, replied = false, callTimeout = null;
+
+function openChat(){
+  $("home").classList.remove("active");
+  $("chat").classList.add("active");
+  $("talk-badge").style.display = "none";
+  chatBody.scrollTop = chatBody.scrollHeight;
+  if(!flowStarted){
+    flowStarted = true;
+    liveFeed.forEach(([who,text],i)=>{
+      setTimeout(()=>{
+        addMsg(who,text);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }, 1800 + i*AUTO_FLOW_INTERVAL);
+    });
+  }
+}
+$("back-btn").addEventListener("click", ()=>{
+  $("chat").classList.remove("active");
+  $("home").classList.add("active");
+});
+
+/* ---- 送信 → 既読 → いきなり着信 ---- */
+const input = $("msg-input"), sendBtn = $("send-btn");
+input.addEventListener("input", ()=> sendBtn.disabled = !input.value.trim());
+
+/* ===== キーボード対策 =====
+   スマホでキーボードが開くと画面の高さが変わり、
+   スクロール位置が先頭に飛ぶのを防ぐ。常に最新メッセージに張り付く */
+const scrollBottom = () => { chatBody.scrollTop = chatBody.scrollHeight; };
+const phoneEl = $("phone");
+const vv = window.visualViewport;
+const isMobile = matchMedia("(max-width:480px)").matches;
+if (vv && isMobile) {
+  const onVV = () => {
+    if ($("chat").classList.contains("active") && document.activeElement === input) {
+      /* キーボードを除いた見えている領域に端末フレームをぴったり重ねる */
+      phoneEl.style.height = vv.height + "px";
+      phoneEl.style.transform = "translateY(" + vv.offsetTop + "px)";
+      window.scrollTo(0, 0);
+      scrollBottom();
+    } else {
+      phoneEl.style.height = "";
+      phoneEl.style.transform = "";
+    }
+  };
+  vv.addEventListener("resize", onVV);
+  vv.addEventListener("scroll", onVV);
+  /* iOSがこっそりページをスクロールさせたら即座に戻す */
+  window.addEventListener("scroll", ()=> window.scrollTo(0, 0));
+}
+input.addEventListener("focus", ()=>{
+  /* キーボードの開くアニメーション中に数回、最下部へ張り付け直す */
+  [100, 300, 600].forEach(t => setTimeout(scrollBottom, t));
+});
+input.addEventListener("blur", ()=>{
+  phoneEl.style.height = "";
+  phoneEl.style.transform = "";
+  window.scrollTo(0, 0);
+  setTimeout(scrollBottom, 100);
+});
+/* チャットの本文をタップしたらキーボードを閉じる(本物のアプリと同じ挙動) */
+chatBody.addEventListener("touchstart", ()=>{
+  if(document.activeElement === input) input.blur();
+});
+function send(){
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = ""; sendBtn.disabled = true;
+  const row = addMsg(null, text, true);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  animateRead(row);
+  if(!replied){
+    replied = true;
+    /* 前フリのメッセージは無し。既読がつき始めた頃に電話が鳴る */
+    callTimeout = setTimeout(startCall, CALL_DELAY);
+  }
+}
+sendBtn.addEventListener("click", send);
+input.addEventListener("keydown", e=>{ if(e.key==="Enter") send(); });
+
+/* ---- 着信 ---- */
+let callTimerInt = null;
+function startCall(){
+  clearTimeout(callTimeout);
+  $("call-status").innerHTML = '<span class="dots">着信中</span>';
+  $("call-actions").style.display = "flex";
+  $("incoming").classList.add("active");
+  if(navigator.vibrate) navigator.vibrate([500,300,500,300,500,300,500]);
+}
+$("btn-decline").addEventListener("click", endCall);
+$("btn-accept").addEventListener("click", ()=>{
+  $("call-actions").style.display = "none";
+  let sec = 0;
+  $("call-status").innerHTML = '<span id="call-timer">00:00</span>';
+  callTimerInt = setInterval(()=>{
+    sec++;
+    const m = String(Math.floor(sec/60)).padStart(2,"0");
+    const s = String(sec%60).padStart(2,"0");
+    const t = $("call-timer");
+    if(t) t.textContent = m+":"+s;
+  },1000);
+  /* 通話画面を閉じたい時: 画面をダブルタップ */
+  $("incoming").addEventListener("dblclick", endCall, {once:true});
+});
+function endCall(){
+  clearInterval(callTimerInt);
+  if(navigator.vibrate) navigator.vibrate(0);
+  $("incoming").classList.remove("active");
+}
+
+/* ---- 撮影用の手動トリガー ---- */
+let taps = [];
+$("chat-header").addEventListener("click", ()=>{
+  const t = Date.now();
+  taps = taps.filter(x => t - x < 900).concat(t);
+  if(taps.length >= 3){ taps = []; startCall(); }
+});
+document.addEventListener("keydown", e=>{
+  if(e.key.toLowerCase()==="c") startCall();
+  if(e.key.toLowerCase()==="r") location.reload();
+  if(e.key.toLowerCase()==="f") toggleFullscreen();
+});
+/* 全画面切替: Fキー、またはホーム画面の時計を素早く3回タップ(Android/PC用) */
+function toggleFullscreen(){
+  const el = document.documentElement;
+  if(!document.fullscreenElement && el.requestFullscreen){ el.requestFullscreen(); }
+  else if(document.exitFullscreen){ document.exitFullscreen(); }
+}
+let clkTaps = [];
+document.querySelector(".home-clock").addEventListener("click", ()=>{
+  const t = Date.now();
+  clkTaps = clkTaps.filter(x => t - x < 900).concat(t);
+  if(clkTaps.length >= 3){ clkTaps = []; toggleFullscreen(); }
+});
 </script>
 </body>
 </html>

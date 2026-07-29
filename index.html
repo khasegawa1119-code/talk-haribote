@@ -155,17 +155,8 @@
     background:linear-gradient(180deg,#0c2a1a 0%,#123a26 55%,#0a2015 100%);
     color:#fff;text-align:center;
   }
-  #incoming.active{display:flex;animation:callin .35s ease, jitter 0.42s linear infinite .35s;}
+  #incoming.active{display:flex;animation:callin .35s ease;}
   @keyframes callin{from{opacity:0;transform:scale(1.05);}to{opacity:1;transform:none;}}
-  /* 実機の振動は鳴らせない端末向けに、画面がわずかに震える視覚効果を重ねる */
-  @keyframes jitter{
-    0%{transform:translate(0,0);}
-    20%{transform:translate(-1px,1px);}
-    40%{transform:translate(1px,-1px);}
-    60%{transform:translate(-1px,-1px);}
-    80%{transform:translate(1px,1px);}
-    100%{transform:translate(0,0);}
-  }
   .call-top{flex:none;padding-top:70px;}
   .call-app{font-size:13px;letter-spacing:2px;color:rgba(255,255,255,.55);}
   .call-avatar{

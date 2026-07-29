@@ -155,8 +155,17 @@
     background:linear-gradient(180deg,#0c2a1a 0%,#123a26 55%,#0a2015 100%);
     color:#fff;text-align:center;
   }
-  #incoming.active{display:flex;animation:callin .35s ease;}
+  #incoming.active{display:flex;animation:callin .35s ease, jitter 0.42s linear infinite .35s;}
   @keyframes callin{from{opacity:0;transform:scale(1.05);}to{opacity:1;transform:none;}}
+  /* 実機の振動は鳴らせない端末向けに、画面がわずかに震える視覚効果を重ねる */
+  @keyframes jitter{
+    0%{transform:translate(0,0);}
+    20%{transform:translate(-1px,1px);}
+    40%{transform:translate(1px,-1px);}
+    60%{transform:translate(-1px,-1px);}
+    80%{transform:translate(1px,1px);}
+    100%{transform:translate(0,0);}
+  }
   .call-top{flex:none;padding-top:70px;}
   .call-app{font-size:13px;letter-spacing:2px;color:rgba(255,255,255,.55);}
   .call-avatar{
@@ -269,7 +278,7 @@
    ・手動着信: チャットのヘッダーを素早く3回タップ
    ・キーボード: C = 着信 / R = リセット
 ========================================================= */
-const CALL_DELAY = 5500;          // 返信送信から着信までの時間(ms)。既読が2〜3件ついた頃
+const CALL_DELAY = 7000;          // 返信送信から着信までの時間(ms)
 const AUTO_FLOW_INTERVAL = 3000;  // 開いた後、新着メッセージが流れてくる間隔
 
 const $ = id => document.getElementById(id);
@@ -526,6 +535,29 @@ function send(){
 sendBtn.addEventListener("click", send);
 input.addEventListener("keydown", e=>{ if(e.key==="Enter") send(); });
 
+/* ---- 着信の振動演出 ----
+   ※ navigator.vibrate はAndroidのブラウザでは実際に端末が振動しますが、
+      iPhoneのSafariは仕様上ブラウザ経由の振動に対応していないため鳴りません(Apple側の制限)。
+      iPhoneでも見た目でわかるよう、着信画面自体が小刻みに震えるCSSアニメーションを併用しています。 */
+let vibrating = false, vibrateTimer = null;
+function startVibration(){
+  if(!navigator.vibrate) return;
+  vibrating = true;
+  const pattern = [500, 250, 500, 250, 500]; // ブー・ブー・ブー、を1セット
+  const cycleMs = pattern.reduce((a,b)=>a+b, 0) + 500; // セット間の間隔
+  const loop = () => {
+    if(!vibrating) return;
+    navigator.vibrate(pattern);
+    vibrateTimer = setTimeout(loop, cycleMs);
+  };
+  loop();
+}
+function stopVibration(){
+  vibrating = false;
+  clearTimeout(vibrateTimer);
+  if(navigator.vibrate) navigator.vibrate(0);
+}
+
 /* ---- 着信 ---- */
 let callTimerInt = null;
 function startCall(){
@@ -533,10 +565,11 @@ function startCall(){
   $("call-status").innerHTML = '<span class="dots">着信中</span>';
   $("call-actions").style.display = "flex";
   $("incoming").classList.add("active");
-  if(navigator.vibrate) navigator.vibrate([500,300,500,300,500,300,500]);
+  startVibration();
 }
 $("btn-decline").addEventListener("click", endCall);
 $("btn-accept").addEventListener("click", ()=>{
+  stopVibration();
   $("call-actions").style.display = "none";
   let sec = 0;
   $("call-status").innerHTML = '<span id="call-timer">00:00</span>';
@@ -551,8 +584,8 @@ $("btn-accept").addEventListener("click", ()=>{
   $("incoming").addEventListener("dblclick", endCall, {once:true});
 });
 function endCall(){
+  stopVibration();
   clearInterval(callTimerInt);
-  if(navigator.vibrate) navigator.vibrate(0);
   $("incoming").classList.remove("active");
 }
 

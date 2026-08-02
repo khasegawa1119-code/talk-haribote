@@ -293,8 +293,8 @@ const chatBody = $("chat-body");
 
 /* ---- 時計 ---- */
 /* 撮影用に日時は固定表示(端末の実時刻には連動しません) */
-const FIXED_DATE_LABEL = "8月1日　月曜日";
-const FIXED_TIME = "10:24";
+const FIXED_DATE_LABEL = "8月2日　火曜日";
+const FIXED_TIME = "9:17";
 function tickClock(){
   $("sb-time-1").textContent = FIXED_TIME;
   $("sb-time-2").textContent = FIXED_TIME;
@@ -305,8 +305,8 @@ tickClock();
 /* 新着メッセージのタイムスタンプも固定時刻を使用(実際の経過に応じて少しずつ進める) */
 let liveMinuteOffset = 0;
 const now = () => {
-  const base = 24 + liveMinuteOffset;
-  const h = 10 + Math.floor(base/60);
+  const base = 17 + liveMinuteOffset;
+  const h = 9 + Math.floor(base/60);
   const m = base % 60;
   liveMinuteOffset++;
   return h + ":" + String(m).padStart(2,"0");
@@ -329,7 +329,7 @@ homeApps.forEach(([emoji,name,bg,badge])=>{
   $("icon-grid").appendChild(d);
 });
 const dockApps = [
-  {html:`<div class="app-icon talk-icon">${talkSVG}<span class="badge" id="talk-badge">27</span></div><div class="app-name">Talk</div>`, main:true},
+  {html:`<div class="app-icon talk-icon">${talkSVG}<span class="badge" id="talk-badge">56</span></div><div class="app-name">Talk</div>`, main:true},
   {html:`<div class="app-icon" style="background:#34c759;font-size:28px">📞</div><div class="app-name">電話</div>`},
   {html:`<div class="app-icon" style="background:#fff;font-size:28px">🌐</div><div class="app-name">ブラウザ</div>`},
   {html:`<div class="app-icon" style="background:linear-gradient(135deg,#f6d365,#fda085);font-size:28px">💬</div><div class="app-name">メッセージ</div>`},
